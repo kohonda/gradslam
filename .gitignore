@@ -142,3 +142,5 @@ log/
 
 # Tutorials data
 ICL/
+
+*.sif

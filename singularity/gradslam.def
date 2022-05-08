@@ -1,0 +1,41 @@
+Bootstrap: docker
+From: pytorch/pytorch:1.11.0-cuda11.3-cudnn8-devel
+
+
+
+%environment
+    echo "Setting up environment"
+    export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+    export DEBIAN_FRONTEND=noninteractive
+
+%post
+    # For cuda public gpc key error patch 
+    # TODO: remove this when cuda public gpc key is fixed
+    rm /etc/apt/sources.list.d/cuda.list
+    rm /etc/apt/sources.list.d/nvidia-ml.list
+    apt-key del 7fa2af80
+    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub
+    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2004/x86_64/7fa2af80.pub
+
+    echo "Installing required packages..."
+    apt-get update
+    apt-get upgrade -y 
+    # Timezone setup
+    echo "Setting up timezone..."
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get install -y tzdata
+    export TZ=Asia/Tokyo
+    
+    apt-get install --no-install-recommends -y software-properties-common git wget
+    apt-get install --no-install-recommends -y python3-pip
+
+    # install from local clone
+    git clone https://github.com/krrish94/chamferdist.git
+    cd chamferdist
+    pip3 install .
+    cd ..
+    git clone https://github.com/kohonda/gradslam.git
+    cd gradslam
+    pip3 install -e .[dev]
+
+
