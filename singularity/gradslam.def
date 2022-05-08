@@ -1,8 +1,6 @@
 Bootstrap: docker
 From: pytorch/pytorch:1.11.0-cuda11.3-cudnn8-devel
 
-
-
 %environment
     echo "Setting up environment"
     export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
@@ -27,6 +25,7 @@ From: pytorch/pytorch:1.11.0-cuda11.3-cudnn8-devel
     export TZ=Asia/Tokyo
     
     apt-get install --no-install-recommends -y software-properties-common git wget
+    apt-get install --no-install-recommends -y ffmpeg libsm6 libxext6
     apt-get install --no-install-recommends -y python3-pip
 
     # install from local clone
